@@ -1,0 +1,1 @@
+mongod --dbpath=%~dp0..\data\data\ --logpath=%~dp0..\data\db.log

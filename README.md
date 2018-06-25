@@ -6,6 +6,6 @@
 
 > npm install && npm start
 
-## api文檔
+## api文档
 
-參見 `api.md`
+参见 `api.md`

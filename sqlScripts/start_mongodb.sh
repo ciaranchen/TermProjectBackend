@@ -1,0 +1,1 @@
+mongod --dbpath=../data/data/ --logpath=../data/db.log &

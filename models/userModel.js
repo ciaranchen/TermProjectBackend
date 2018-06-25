@@ -14,18 +14,21 @@ const userSchema = new Schema({
   username: String,
   password: {
     type: String,
-    required: String,
+    required: true,
     trim: true
   },
-  update_at: {
+  create_at: {
     type: Date,
     default: Date.now
   },
+  update_at: {
+    type: Date,
+    update_at: Date.now,
+    default: Date.now
+  },
   avatar: String, // 头像的url
-  // todo: finish the defination of user
+  auth: { type: Boolean, required: true, default: false }
 });
-
-let User = mongoose.model('userModel', userSchema);
 
 //hashing a password before saving it to the database
 userSchema.pre('save', function (next) {
@@ -40,8 +43,8 @@ userSchema.pre('save', function (next) {
 });
 
 // authenticate
-userSchema.statics.authenticate = (email, password, callback) => {
-  User.findOne({
+exports.authenticate = (email, password, callback) => {
+  UserModel.findOne({
     email: email
   }).exec((err, user) => {
     if (err) {
@@ -57,5 +60,8 @@ userSchema.statics.authenticate = (email, password, callback) => {
   });
 };
 
-module.exports = User;
+let UserModel = mongoose.model('User', userSchema);
+
+exports.UserModel = UserModel;
+
 

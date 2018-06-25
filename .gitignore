@@ -1,8 +1,8 @@
 
-node_modules
-
+node_modules/
+data/
+uploads/
+sessions/
 
 .idea
 .vscode
-
-uploads/*
