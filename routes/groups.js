@@ -4,14 +4,17 @@ const CardGroupModel = require('../models/cardGroupModel');
 
 const Groups = CardGroupModel.CardGroupModel;
 
+// todo: about groups major
+
 router.use((req, res, next) => {
-  if (!req.session.user_id) return res.end({status: "not auth."});
-  else next();
+  if (!req.session.uid) {
+    next({status: 405, message: 'not auth.'});
+  }
 });
 
 router.get('/create', (req, res, next) => {
   let name = req.params.name;
-  let user_id = req.session.id;
+  let user_id = req.session.uid;
   Groups.create({
     name: name,
     creator: user_id,
@@ -23,7 +26,7 @@ router.get('/create', (req, res, next) => {
 });
 
 router.get('/getall', (req, res, next) => {
-  let user_id = req.session.id;
+  let user_id = req.session.uid;
   Groups.where("owner").equal(user_id)
     .exec((err, docs) => {
       if (err) next(err);
@@ -35,24 +38,27 @@ router.get('/getall', (req, res, next) => {
 });
 
 router.get('/delete', (req, res, next) => {
-  let user_id = req.session.id;
-  // todo: get group_id from request
-  let group_id = group_id;
+  let user_id = req.session.uid;
+  // get group_id from request
+  let group_id = req.query.gid;
   Groups.findOneAndRemove({
     id: group_id,
     owner: user_id
   }, (err, doc) => {
-    console.log(doc);
+    // console.log(doc);
     if (err) next(err);
+    else if (!doc) next({status: 405, message: 'no such a group.'});
     else res.send({
       status: 'OK'
     });
   });
+  // todo: delete all card in this group.
 });
 
 // change name of group
 router.get('/update', (req, res, next) => {
-  let user_id = req.session.id;
+  let user_id = req.session.uid;
+  if (!req.query.name) next({status: 405, message: 'no enough params.'});
   Groups.updateOne({
     owner: user_id,
     _id: req.query.gid

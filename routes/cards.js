@@ -12,30 +12,33 @@ let upload = multer({
     destination: 'uploads/',
     filename: (req, file, cb) => {
       // todo: do something with fileFormat
-      let filename = file.fieldname + '-' + md5(file) + "." + fileFormat[fileFormat.length - 1];
-      console.log(filename)
+      let filename = `${file.fieldname}-${md5(file)}.${fileFormat[fileFormat.length - 1]}`;
+      console.log(filename);
       cb(null, filename);
     }
   })
 });
 
-
 const Cards = cardModel.CardModel;
 const Groups = cardGroupModel.cardGroupModel;
 
 router.use((req, res, next) => {
-  if (!req.session.user_id) return res.end({status: "no auth."});
-  else next();
+  router.use((req, res, next) => {
+    if (!req.session.uid) {
+      next({status: 405, message: 'not auth.'});
+    }
+  });
 });
 
-// router.use((req, res, next) => {
-//   if (req.params.gid) {
-//     Groups.findById(req.params.gid, (err, doc) => {
-//       if (err) next(err);
-//       if (!doc) return res.end({ status: "no privilege." });
-//     })
-//   }
-// });
+
+router.use((req, res, next) => {
+  if (req.params.gid) {
+    Groups.findById(req.params.gid, (err, doc) => {
+      if (err) next(err);
+      if (!doc) next({status: 405, message: 'no such a group.'});
+    })
+  }
+});
 
 // query card.
 router.get('/:gid/', (req, res) => {
@@ -51,27 +54,28 @@ router.post('/:gid/create', upload.single('photo'), (req, res) => {
   let file = req.file;
   let gid = req.params.gid;
   if (file) {
-    let filename = file.fieldname + '-' + md5(file) + "." + fileFormat[fileFormat.length - 1];
-  } else {
-    let filename = undefined;
+    let filename = `${file.fieldname}-${md5(file)}.${fileFormat[fileFormat.length - 1]}`;
   }
   Cards.create({
     group: gid,
     fileLoc: filename,
     question: req.body.question,
     answer: req.body.answer,
-  }, (err) => {
+  }, (err, doc) => {
     if (err) next(err);
-    else res.send({status: "OK"});
+    else res.send({
+      status: "OK",
+      res: doc._id
+    });
   });
 });
 
 // update card
 router.post('/:gid/:cid/update', (req, res) => {
+  // todo: optional args
   let file = req.file;
   let gid = req.params.gid;
-  
-  let set_set = {}
+  let set_set = {};
   if (req.body.answer) {
     set_set.answer = req.body.answer;
   }
@@ -79,8 +83,7 @@ router.post('/:gid/:cid/update', (req, res) => {
     set_set.question = req.body.question;
   }
   if (file) {
-    let filename = file.fieldname + '-' + md5(file) + "." + fileFormat[fileFormat.length - 1];
-    set_set.fileLoc = filename;
+    set_set.fileLoc = `${file.fieldname}-${md5(file)}.${fileFormat[fileFormat.length - 1]}`;
   }
   Cards.updateOne({
     group: gid,

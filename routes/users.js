@@ -4,20 +4,6 @@ const UserModel = require('../models/userModel');
 
 const Users = UserModel.UserModel;
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send({status: 'OK'});
-});
-
-// maybe not use
-router.get('/query_name', (req, res, next) => {
-  Users.findOne({email: req.query.email}, (err, doc) => {
-    if (err) next(err);
-    else if (doc) res.send({status:'OK', res: true});
-    else res.send({status:'OK', res: false});
-  });
-});
-
 router.post('/register', (req, res, next) => {
   console.log(req.body.username);
   Users.create({
@@ -27,18 +13,13 @@ router.post('/register', (req, res, next) => {
   }, (err) => {
     if (err) next(err);
     else {
-      console.log(req.body);
+      // console.log(req.body);
       // todo: send auth email to user.
       res.send({
         status: "OK"
       });
     }
   });
-});
-
-router.get('/auth/:uid', (req, res, next) => {
-  console.log(req.params.uid);
-  // todo: update user state
 });
 
 router.post('/login', (req, res, next) => {
@@ -51,7 +32,7 @@ router.post('/login', (req, res, next) => {
     UserModel.authenticate(email, password, (err, user) => {
       if (err || !user) return next(err);
       else {
-        req.session.user_id = user._id;
+        req.session.uid = user._id;
         res.send({
           status: "OK",
           res: user.username
@@ -63,9 +44,8 @@ router.post('/login', (req, res, next) => {
   }
 });
 
-// logout
 router.get('/logout', (req, res, next) => {
-  if (req.session.id) {
+  if (req.session.uid) {
     // delete session
     req.session.destroy((err) => {
       if (err) return next(err);
@@ -75,14 +55,27 @@ router.get('/logout', (req, res, next) => {
     res.send({"status": "OK"});
 });
 
-// maybe not use
+// ================ maybe not use =====================
 router.get('/profile', (req, res, next) => {
-  UserModel.findById(req.session.user_id)
+  UserModel.findById(req.session.uid)
     .exec((err, user) => {
       if (err) return next(res);
       else if (!user) return next(new Error("not authorized."));
       else return user;
     });
+});
+
+router.get('/query_name', (req, res, next) => {
+  Users.findOne({email: req.query.email}, (err, doc) => {
+    if (err) next(err);
+    else if (doc) res.send({status:'OK', res: true});
+    else res.send({status:'OK', res: false});
+  });
+});
+
+router.get('/auth/:uid', (req, res, next) => {
+  console.log(req.params.uid);
+  // todo: update user state
 });
 
 /*
