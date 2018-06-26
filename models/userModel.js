@@ -26,11 +26,11 @@ const userSchema = new Schema({
     update_at: Date.now,
     default: Date.now
   },
-  avatar: String, // 头像的url
+  // avatar: String, // 头像的url
   auth: { type: Boolean, required: true, default: false }
 });
 
-//hashing a password before saving it to the database
+// hashing a password before saving it to the database
 userSchema.pre('save', function (next) {
   let user = this;
   bcrypt.hash(user.password, 10, function (err, hash) {
