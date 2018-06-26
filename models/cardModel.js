@@ -9,9 +9,6 @@ let CardModel = mongoose.model('userModel', Schema({
   question: String,
   answer: String,
   imageLoc: String,
-  imageHash: String,
-  fileLoc: String,
-  fileHash: String
 }));
 
 exports.CardModel = CardModel;

@@ -4,6 +4,11 @@ const CardGroupModel = require('../models/cardGroupModel');
 
 const Groups = CardGroupModel.CardGroupModel;
 
+router.use((req, res, next) => {
+  if (!req.session.user_id) return res.end({status: "not auth."});
+  else next();
+});
+
 router.get('/create', (req, res, next) => {
   let name = req.params.name;
   let user_id = req.session.id;
@@ -60,3 +65,5 @@ router.get('/update', (req, res, next) => {
     });
   })
 });
+
+module.exports = router;
