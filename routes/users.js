@@ -4,6 +4,32 @@ const UserModel = require('../models/userModel');
 
 const Users = UserModel.UserModel;
 
+/*
+const multer = require('multer');
+const UserModel = require('../models/userModel');
+
+let upload = multer({
+  storage: multer.diskStorage({
+    destination: 'uploads',
+    filename: (req, file, cb) => {
+      let filename = file.originalname + Date.now();
+      // check_login:
+      UserModel.findById(req.session.user_id)
+        .exec((err, user) => {
+          if (err) return err;
+          else if (!user) return new Error("not authorized.");
+          else {
+            user.imageLoc = filename;
+            user.save(); // update user;
+            cb(null, filename);
+          }
+        }); 
+      cb(null, file.fieldname + '-' + Date.now());
+    }
+  })
+});
+*/
+
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   res.send({status: 'OK'});
@@ -76,8 +102,12 @@ router.get('/profile', (req, res, next) => {
     });
 });
 
-router.get('/update_profile', (req, res, next) => {
-  // todo: finish this.
+router.get('/upload_avatar', upload.single('avatar'), (req, res, next) => {
+  upload.single('avatar')(req, res, (err) => {
+    if (err) return err;
+    else return {status: "OK"};
+  });
 });
 
 module.exports = router;
+
