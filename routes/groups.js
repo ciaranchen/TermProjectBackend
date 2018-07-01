@@ -10,25 +10,27 @@ router.use((req, res, next) => {
   if (!req.session.uid) {
     next({status: 405, message: 'not auth.'});
   }
+  next();
 });
 
 router.get('/create', (req, res, next) => {
-  let name = req.params.name;
+  let name = req.query.name;
   let user_id = req.session.uid;
   Groups.create({
     name: name,
     creator: user_id,
     owner: user_id,
-  }, (err) => {
+  }, (err, doc) => {
     if (err) next(err);
-    else res.send({status: 'OK'});
+    else res.send({status: 'OK', res: doc._id});
   });
 });
 
 router.get('/getall', (req, res, next) => {
   let user_id = req.session.uid;
-  Groups.where("owner").equal(user_id)
-    .exec((err, docs) => {
+  // todo: explain in api doc
+  Groups.find({owner: user_id}, {name: 1, owner: 1, _id: 1},
+    (err, docs) => {
       if (err) next(err);
       else res.send({
         status: 'OK',
@@ -42,14 +44,15 @@ router.get('/delete', (req, res, next) => {
   // get group_id from request
   let group_id = req.query.gid;
   Groups.findOneAndRemove({
-    id: group_id,
+    _id: group_id,
     owner: user_id
   }, (err, doc) => {
     // console.log(doc);
     if (err) next(err);
     else if (!doc) next({status: 405, message: 'no such a group.'});
     else res.send({
-      status: 'OK'
+        status: 'OK',
+        res: doc._id
     });
   });
   // todo: delete all card in this group.
@@ -71,5 +74,8 @@ router.get('/update', (req, res, next) => {
     });
   })
 });
+
+// todo: import groups
+// todo: export groups
 
 module.exports = router;

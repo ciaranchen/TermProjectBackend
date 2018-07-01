@@ -60,7 +60,7 @@ exports.authenticate = (email, password, callback) => {
   });
 };
 
-let UserModel = mongoose.model('User', userSchema);
+let UserModel = mongoose.model('UserModel', userSchema);
 
 exports.UserModel = UserModel;
 

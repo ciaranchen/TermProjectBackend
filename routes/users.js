@@ -24,7 +24,6 @@ router.post('/register', (req, res, next) => {
 
 router.post('/login', (req, res, next) => {
   if (req.body.email &&
-    req.body.username &&
     req.body.password) {
     let email = req.body.email,
       password = req.body.password;
@@ -40,7 +39,7 @@ router.post('/login', (req, res, next) => {
       }
     });
   } else {
-    return next(new Error('All fields required.'));
+    next({status: 405, message: 'no enough params.'});
   }
 });
 
@@ -56,11 +55,17 @@ router.get('/logout', (req, res, next) => {
 });
 
 // ================ maybe not use =====================
+router.get('/testLogin', (req, res, next) => {
+  if (req.session.uid) res.send({status: "OK", res: true});
+  else res.send({status: "OK", res: false});
+});
+
 router.get('/profile', (req, res, next) => {
+  // todo: fix it
   UserModel.findById(req.session.uid)
     .exec((err, user) => {
-      if (err) return next(res);
-      else if (!user) return next(new Error("not authorized."));
+      if (err) next(err);
+      else if (!user) next({status: 405, message: 'no enough params.'});
       else return user;
     });
 });

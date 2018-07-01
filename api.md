@@ -194,6 +194,7 @@ query
 |属性名|类型|说明|
 |:----- |:-------|----- |
 |status |String | 状态 |
+|res |ObjectId | 卡片组id |
 
 #### 接口示例
 
@@ -235,11 +236,13 @@ query
 - 用户登陆状态: seesion.uid
 - url中的gid，即卡片组id。此卡片组的owner必须为当前登陆用户
 
+> gid作为query参数进行传递,即使在Post请求中,也能解析到query参数
+
 ### query card
 
 #### URL
 
-> [http://localhost:3000/cards/<:gid>](http://localhost:3000/cards/<:gid>)
+> [http://localhost:3000/cards/](http://localhost:3000/cards/)
 
 #### HTTP请求方式
 
@@ -264,7 +267,7 @@ query
 
 #### URL
 
-> [http://localhost:3000/cards/<:gid>/create](http://localhost:3000/cards/<:gid>/create)
+> [http://localhost:3000/cards/create](http://localhost:3000/cards/create)
 
 #### HTTP请求方式
 
@@ -295,7 +298,7 @@ Body:
 
 #### URL
 
-> [http://localhost:3000/cards/<:gid>/update](http://localhost:3000/cards/<:gid>/update)
+> [http://localhost:3000/cards/update](http://localhost:3000/cards/update)
 
 #### HTTP请求方式
 
