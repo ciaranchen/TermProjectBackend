@@ -28,24 +28,23 @@ describe('accesssing error data', function() {
   });
 });
 
-
-describe('prepare for next test', () => {
-  it('register', function(done) {
-    this.timeout(0);
-    session(app)
-      .post('/users/register')
-      .send({
-        email: 'ciaranchen@gmail.com',
-        username: 'ciaran',
-        password: 'ciaranchen'
-      }).set('Accept', 'application/json')
-      .expect(200, {status:'OK'})
-      .end((err, res) => {
-        console.log(res.body);
-        done();
-      });
-  });
-});
+// describe('prepare for next test', () => {
+//   it('register', function(done) {
+//     this.timeout(0);
+//     session(app)
+//       .post('/users/register')
+//       .send({
+//         email: 'ciaranchen@gmail.com',
+//         username: 'ciaran',
+//         password: 'ciaranchen'
+//       }).set('Accept', 'application/json')
+//       .expect(200, {status:'OK'})
+//       .end((err, res) => {
+//         console.log(res.body);
+//         done();
+//       });
+//   });
+// });
 
 
 describe('test User Model', function() {
@@ -54,17 +53,16 @@ describe('test User Model', function() {
   let uid, gid, cid;
 
 
-
-  it('before login', (done) => {
-    this.timeout(0);
-    request
-      .get('/users/testLogin')
-      .expect(200, {status: 'OK', res: false})
-      .end((err) => {
-        if (err) return done(err);
-        else return done();
-      });
-  });
+//   it('before login', (done) => {
+//     this.timeout(0);
+//     request
+//       .get('/users/testLogin')
+//       .expect(200, {status: 'OK', res: false})
+//       .end((err) => {
+//         if (err) return done(err);
+//         else return done();
+//       });
+//   });
 
   it('login', function(done) {
     this.timeout(0);
@@ -83,13 +81,13 @@ describe('test User Model', function() {
       });
   });
 
-  it('after login', function (done) {
-    this.timeout(0);
-    request
-      .get('/users/testLogin')
-      .expect(200, {status: 'OK', res: true})
-      .end(done);
-  });
+//   it('after login', function (done) {
+//     this.timeout(0);
+//     request
+//       .get('/users/testLogin')
+//       .expect(200, {status: 'OK', res: true})
+//       .end(done);
+//   });
 
   it('create groups', (done) => {
     this.timeout(0);
@@ -109,39 +107,39 @@ describe('test User Model', function() {
       });
   });
 
-  it('change name of group', (done) => {
-    this.timeout(0);
-    request
-      .get('/groups/update')
-      .query({
-        gid: gid,
-        name: 'newname'
-      })
-      .expect(200, {status: 'OK'})
-      .end((err) => {
-        if (err) return done(err);
-        return done();
-      });
-  });
+//   it('change name of group', (done) => {
+//     this.timeout(0);
+//     request
+//       .get('/groups/update')
+//       .query({
+//         gid: gid,
+//         name: 'newname'
+//       })
+//       .expect(200, {status: 'OK'})
+//       .end((err) => {
+//         if (err) return done(err);
+//         return done();
+//       });
+//   });
 
-  it('get all of groups', (done) => {
-    this.timeout(0);
-    request
-      .get('/groups/getall')
-      .expect(200)
-      .end((err, res) => {
-        // console.log(res.body);
-        res.body.status.should.equal('OK');
-        let docs = res.body.res;
-        docs.length.should.equal(1);
-        let doc = docs[0];
-        doc.name.should.equal('newname');
-        doc._id.should.equal(gid);
+//   it('get all of groups', (done) => {
+//     this.timeout(0);
+//     request
+//       .get('/groups/getall')
+//       .expect(200)
+//       .end((err, res) => {
+//         // console.log(res.body);
+//         res.body.status.should.equal('OK');
+//         let docs = res.body.res;
+//         docs.length.should.equal(1);
+//         let doc = docs[0];
+//         doc.name.should.equal('newname');
+//         doc._id.should.equal(gid);
 
-        if (err) return done(err);
-        return done();
-      });
-  });
+//         if (err) return done(err);
+//         return done();
+//       });
+//   });
 
   it('create card', (done) => {
     this.timeout(0);
@@ -162,50 +160,107 @@ describe('test User Model', function() {
       });
   });
 
-  // todo: update card test
-  // todo: query card test
-
-  it('delete card', (done) => {
+  it('update card', (done) => {
     this.timeout(0);
     request
-      .get('/cards/' + cid + '/delete')
+      .post('/cards/' + cid + '/update')
       .query({gid: gid})
-      .expect(200, {status: "OK"})
-      .end(done);
-  });
-
-  it('delete group', (done) => {
-    this.timeout(0);
-    request
-      .get('/groups/delete')
-      .query({
-        gid: gid
+      .send({
+        answer: "42.This answer is from <<The Hitchhiker\'s Guide to the Galaxy>>"
       })
       .expect(200)
       .end((err, res) => {
-        res.body.status.should.equal('OK');
-        res.body.res.should.equal(gid);
+        if (err) return done(err);
+        console.log(res.body);
+        return done();
+      });
+  });
+  
+  it('query card', (done) => {
+    this.timeout(0);
+    request
+      .get('/cards')
+      .query({gid: gid})
+      .expect(200, { status: 'OK',
+        res: [{
+          group: gid,
+          question: 'Answer to the Ultimate Question of Life, The Universe, and Everything?',
+          answer: '42.This answer is from <<The Hitchhiker\'s Guide to the Galaxy>>'
+        }]})
+      .end((err, res) => {
         if (err) return done(err);
         return done();
       });
   });
 
-  it('logout', (done) => {
-    this.timeout(0);
-    request
-      .get('/users/logout')
-      .expect(200, {status: "OK"})
-      .end(done);
-  });
+  // it('delete card', (done) => {
+  //   this.timeout(0);
+  //   request
+  //     .get('/cards/' + cid + '/delete')
+  //     .query({gid: gid})
+  //     .expect(200, {status: "OK"})
+  //     .end(done);
+  // });
 
-  it('after logout', (done) => {
-    this.timeout(0);
-    request
-      .get('/users/testLogin')
-      .expect(200, {status: 'OK', res: false})
-      .end(done);
-  });
+  // it('delete group', (done) => {
+  //   this.timeout(0);
+  //   request
+  //     .get('/groups/delete')
+  //     .query({
+  //       gid: gid
+  //     })
+  //     .expect(200)
+  //     .end((err, res) => {
+  //       res.body.status.should.equal('OK');
+  //       res.body.res.should.equal(gid);
+  //       if (err) return done(err);
+  //       return done();
+  //     });
+  // });
+
+//   it('logout', (done) => {
+//     this.timeout(0);
+//     request
+//       .get('/users/logout')
+//       .expect(200, {status: "OK"})
+//       .end(done);
+//   });
+
+//   it('after logout', (done) => {
+//     this.timeout(0);
+//     request
+//       .get('/users/testLogin')
+//       .expect(200, {status: 'OK', res: false})
+//       .end(done);
+//   });
 });
 
+// describe('after login', () => {
+//   let request = session(app);
+//   it('login(second time)', function(done) {
+//     this.timeout(0);
+//     request
+//       .post('/users/login')
+//       .send({
+//         email: 'ciaranchen@gmail.com',
+//         password: 'ciaranchen',
+//       }).set('Accept', 'application/json')
+//       .expect(200, {status:'OK', res:'ciaran'})
+//       .end((err, res) => {
+//         if (err) return done(err);
+//         else return done();
+//       });
+//   });
 
+//   it('delete user', (done) => {
+//     request
+//       .get('/users/delete_user')
+//       .expect(200)
+//       .end((err, res) => {
+//         if (err) return done(err);
+//         res.body.status.should.equal('OK');
+//         return done();
+//       })
+//   })
+// });
 

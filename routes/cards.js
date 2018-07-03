@@ -50,7 +50,7 @@ router.get('/', (req, res) => {
   let gid = req.query.gid;
   // todo: select card
   // todo: lazy load
-  Cards.find({ group: gid }, (err, docs) => {
+  Cards.find({ group: gid }, {_id: 0, __v: 0, fileLoc: 0}, (err, docs) => {
     if (err) next(err);
     else res.send({status:"OK", res: docs});
   })
@@ -80,7 +80,7 @@ router.post('/create', upload.single('photo'), (req, res) => {
 });
 
 // update card
-router.post('/:cid/update', (req, res) => {
+router.post('/:cid/update', (req, res, next) => {
   // todo: optional args
   let file = req.file;
   let gid = req.query.gid;

@@ -60,6 +60,13 @@ router.get('/testLogin', (req, res, next) => {
   else res.send({status: "OK", res: false});
 });
 
+router.get('/delete_user', (req, res, next) => {
+  if (!req.session.uid) {
+    next({status: 405, message: 'not auth.'});
+  }
+  res.send({status: "OK", res: req.session.uid});
+});
+
 router.get('/profile', (req, res, next) => {
   // todo: fix it
   UserModel.findById(req.session.uid)
