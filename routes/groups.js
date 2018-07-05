@@ -1,17 +1,19 @@
 const express = require('express');
 const router = express.Router();
 const CardGroupModel = require('../models/cardGroupModel');
+const CardModel = require('../models/cardModel');
 
 const Groups = CardGroupModel.CardGroupModel;
+const Cards = CardModel.CardModel;
 
 // todo: about groups major
 
-router.use((req, res, next) => {
-  if (!req.session.uid) {
-    next({status: 405, message: 'not auth.'});
-  }
-  next();
-});
+// router.use((req, res, next) => {
+//   if (!req.session.uid) {
+//     next({status: 405, message: 'not auth.'});
+//   }
+//   next();
+// });
 
 router.get('/create', (req, res, next) => {
   let name = req.query.name;
@@ -55,7 +57,7 @@ router.get('/delete', (req, res, next) => {
       groups: doc._id
     }, (err) => {
       if (err) next(err);
-      res.send({
+      else res.send({
         status: 'OK',
         res: doc._id
       });   
@@ -81,6 +83,30 @@ router.get('/update', (req, res, next) => {
 });
 
 // todo: import groups
-// todo: export groups
 
+router.get('/export', (req, res, next) => {
+  // todo: add it to api doc
+  let user_id = req.session.uid;
+  Groups.findOne({
+    _id: req.query.gid,
+  }, (err, doc) => {
+    if (err) return next(err);
+    Cards.find({
+      group: doc._id
+    }, {question: 1, answer: 1}, (err, docs) => {
+      if (err) return next(err);
+      let filename = "exports.csv"
+      res.set({
+        "Content-type":"application/octet-stream",
+        "Content-Disposition":"attachment;filename="+encodeURI(filename)
+      });
+      // generate csv file
+      let f = docs.map((e) => {
+        return "\"" + e.question + '\", \"' + e.answer + "\"";
+      }).join('\n');
+      res.write(f, "binary");
+      res.end();
+    });
+  });
+});
 module.exports = router;
