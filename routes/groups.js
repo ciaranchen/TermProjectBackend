@@ -50,12 +50,17 @@ router.get('/delete', (req, res, next) => {
     // console.log(doc);
     if (err) next(err);
     else if (!doc) next({status: 405, message: 'no such a group.'});
-    else res.send({
+    // delete cards all in this group;
+    Cards.remove({
+      groups: doc._id
+    }, (err) => {
+      if (err) next(err);
+      res.send({
         status: 'OK',
         res: doc._id
+      });   
     });
   });
-  // todo: delete all card in this group.
 });
 
 // change name of group
