@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const CardGroupModel = mongoose.model('CardGroupModel', {
-  creator : { type: Schema.Types.ObjectId, ref: 'UserModel' },
-  owner   : { type: Schema.Types.ObjectId, ref: 'UserModel' },
-  name    : String,
+  creator : { type: Schema.Types.ObjectId, ref: 'UserModel', require: true },
+  owner   : { type: Schema.Types.ObjectId, ref: 'UserModel', require: true },
+  name    : { type: String, require: true },
   major   : {
     type: String,
     require: false,

@@ -6,14 +6,29 @@ const CardModel = require('../models/cardModel');
 const Groups = CardGroupModel.CardGroupModel;
 const Cards = CardModel.CardModel;
 
+const import_from_csv = require('../utils/csv_modify').import_from_csv;
+
+const multer = require('multer');
+
+let upload = multer({
+  storage: multer.diskStorage({
+    destination: 'uploads/',
+    filename: (req, file, cb) => {
+      let filename = 'import-' + req.session.uid + '.csv';
+      console.log(filename);
+      cb(null, filename);
+    }
+  })
+});
+
 // todo: about groups major
 
-// router.use((req, res, next) => {
-//   if (!req.session.uid) {
-//     next({status: 405, message: 'not auth.'});
-//   }
-//   next();
-// });
+router.use((req, res, next) => {
+  if (!req.session.uid) {
+    next({status: 405, message: 'not auth.'});
+  }
+  next();
+});
 
 router.get('/create', (req, res, next) => {
   let name = req.query.name;
@@ -82,7 +97,36 @@ router.get('/update', (req, res, next) => {
   })
 });
 
-// todo: import groups
+router.post('/import', upload.single('data'), (req, res, next) => {
+  // todo: add it to api doc
+  let uid = req.session.uid;
+  let file = req.file;
+  filename = 'uploads/import-' + req.session.uid + '.csv';
+  let group_name = req.body.name;
+  let arr = [];
+  // create a new group
+  Groups.create({
+    owner: uid,
+    creator: uid,
+    name: group_name
+  }, (err, doc) => {
+    if (err) return next(err);
+    import_from_csv(filename, 
+      (x) => {
+        arr.push({
+          question: x[0],
+          answer: x[1],
+          group: doc._id
+        });
+      }, () => {
+        console.log(arr);
+        Cards.insertMany(arr, (err) => {
+          if (err) return next(err);
+          res.send({status: "OK"});
+        });
+      });
+  });
+});
 
 router.get('/export', (req, res, next) => {
   // todo: add it to api doc
@@ -109,4 +153,5 @@ router.get('/export', (req, res, next) => {
     });
   });
 });
+
 module.exports = router;

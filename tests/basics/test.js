@@ -1,4 +1,4 @@
-const app = require('../app');
+const app = require('../../app');
 // const supertest = require('supertest');
 const session = require('supertest-session');
 const should = require('should');
@@ -193,30 +193,30 @@ describe('test User Model', function() {
       });
   });
 
-  // it('delete card', (done) => {
-  //   this.timeout(0);
-  //   request
-  //     .get('/cards/' + cid + '/delete')
-  //     .query({gid: gid})
-  //     .expect(200, {status: "OK"})
-  //     .end(done);
-  // });
+  it('delete card', (done) => {
+    this.timeout(0);
+    request
+      .get('/cards/' + cid + '/delete')
+      .query({gid: gid})
+      .expect(200, {status: "OK"})
+      .end(done);
+  });
 
-  // it('delete group', (done) => {
-  //   this.timeout(0);
-  //   request
-  //     .get('/groups/delete')
-  //     .query({
-  //       gid: gid
-  //     })
-  //     .expect(200)
-  //     .end((err, res) => {
-  //       res.body.status.should.equal('OK');
-  //       res.body.res.should.equal(gid);
-  //       if (err) return done(err);
-  //       return done();
-  //     });
-  // });
+  it('delete group', (done) => {
+    this.timeout(0);
+    request
+      .get('/groups/delete')
+      .query({
+        gid: gid
+      })
+      .expect(200)
+      .end((err, res) => {
+        res.body.status.should.equal('OK');
+        res.body.res.should.equal(gid);
+        if (err) return done(err);
+        return done();
+      });
+  });
 
   it('logout', (done) => {
     this.timeout(0);
@@ -261,6 +261,6 @@ describe('after login', () => {
         res.body.status.should.equal('OK');
         return done();
       })
-  })
+  });
 });
 

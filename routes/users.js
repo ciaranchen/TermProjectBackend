@@ -63,8 +63,14 @@ router.get('/testLogin', (req, res, next) => {
 router.get('/delete_user', (req, res, next) => {
   if (!req.session.uid) {
     next({status: 405, message: 'not auth.'});
-  }
-  res.send({status: "OK", res: req.session.uid});
+  };
+  let uid = req.session.uid;
+  Users.deleteOne({
+    _id: uid
+  }, (err) => {
+    if (err) return next(err);
+    res.redirect('/users/logout');
+  });
 });
 
 router.get('/profile', (req, res, next) => {
