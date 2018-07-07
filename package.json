@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "cd tests/basics; mocha test.js"
+    "test": "sh ./tests/start_test.sh"
   },
   "repository": {
     "type": "git",

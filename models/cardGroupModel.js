@@ -9,11 +9,9 @@ const CardGroupModel = mongoose.model('CardGroupModel', {
     type: String,
     require: false,
     enum: [
-      '文学', '英语', '代码'
+      '英语', '数学', '历史', '政治', '编程', '法学', '物理', '天文', '经济学', '医学', '机械自动化', '教育学', '公务员', '生物学', '自然科学', '人文', '数据库', '分布式'
     ]},
   create_at: { type: Date, default: Date.now }
 });
-
-// todo: unique name constraint for same user;
 
 exports.CardGroupModel = CardGroupModel;

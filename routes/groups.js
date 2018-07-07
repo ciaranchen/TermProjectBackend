@@ -101,7 +101,7 @@ router.post('/import', upload.single('data'), (req, res, next) => {
   // todo: add it to api doc
   let uid = req.session.uid;
   let file = req.file;
-  filename = 'uploads/import-' + req.session.uid + '.csv';
+  let filename = 'uploads/import-' + req.session.uid + '.csv';
   let group_name = req.body.name;
   let arr = [];
   // create a new group
@@ -139,7 +139,7 @@ router.get('/export', (req, res, next) => {
       group: doc._id
     }, {question: 1, answer: 1}, (err, docs) => {
       if (err) return next(err);
-      let filename = "exports.csv"
+      let filename = "exports.csv";
       res.set({
         "Content-type":"application/octet-stream",
         "Content-Disposition":"attachment;filename="+encodeURI(filename)
