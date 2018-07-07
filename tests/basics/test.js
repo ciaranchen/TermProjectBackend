@@ -49,8 +49,8 @@ describe('prepare for next test', () => {
 
 describe('test User Model', function() {
   let request = session(app);
-  // user id, group id, card id;
-  let uid, gid, cid;
+  // group id, card id;
+  let gid, cid;
 
 
   it('before login', (done) => {
@@ -94,7 +94,8 @@ describe('test User Model', function() {
     request
       .get('/groups/create')
       .query({
-        name: '1234567890'
+        name: '1234567890',
+        major: '英语'
       })
       .expect(200)
       .end((err, res) => {
@@ -135,6 +136,7 @@ describe('test User Model', function() {
         let doc = docs[0];
         doc.name.should.equal('newname');
         doc._id.should.equal(gid);
+        doc.major.should.equal('英语');
 
         if (err) return done(err);
         return done();
@@ -255,12 +257,12 @@ describe('after login', () => {
   it('delete user', (done) => {
     request
       .get('/users/delete_user')
-      .expect(200)
-      .end((err, res) => {
-        if (err) return done(err);
-        res.body.status.should.equal('OK');
-        return done();
-      })
+      .expect(302)
+      .end(done);
   });
 });
 
+after(() => {
+  console.log('test finished.');
+  process.exit(0);
+});

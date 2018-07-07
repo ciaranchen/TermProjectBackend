@@ -13,8 +13,6 @@ router.post('/register', (req, res, next) => {
   }, (err) => {
     if (err) next(err);
     else {
-      // console.log(req.body);
-      // todo: send auth email to user.
       res.send({
         status: "OK"
       });
@@ -89,11 +87,6 @@ router.get('/query_name', (req, res, next) => {
     else if (doc) res.send({status:'OK', res: true});
     else res.send({status:'OK', res: false});
   });
-});
-
-router.get('/auth/:uid', (req, res, next) => {
-  console.log(req.params.uid);
-  // todo: update user state
 });
 
 /*

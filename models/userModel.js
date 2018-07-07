@@ -27,7 +27,6 @@ const userSchema = new Schema({
     default: Date.now
   },
   // avatar: String, // 头像的url
-  auth: { type: Boolean, required: true, default: false }
 });
 
 // hashing a password before saving it to the database

@@ -21,8 +21,6 @@ let upload = multer({
   })
 });
 
-// todo: about groups major
-
 router.use((req, res, next) => {
   if (!req.session.uid) {
     next({status: 405, message: 'not auth.'});
@@ -31,10 +29,10 @@ router.use((req, res, next) => {
 });
 
 router.get('/create', (req, res, next) => {
-  let name = req.query.name;
   let user_id = req.session.uid;
   Groups.create({
-    name: name,
+    name: req.query.name,
+    major: req.query.major,
     creator: user_id,
     owner: user_id,
   }, (err, doc) => {
@@ -45,8 +43,7 @@ router.get('/create', (req, res, next) => {
 
 router.get('/getall', (req, res, next) => {
   let user_id = req.session.uid;
-  // todo: explain in api doc
-  Groups.find({owner: user_id}, {name: 1, owner: 1, _id: 1},
+  Groups.find({owner: user_id}, {name: 1, owner: 1, _id: 1, major: 1},
     (err, docs) => {
       if (err) next(err);
       else res.send({
@@ -58,7 +55,6 @@ router.get('/getall', (req, res, next) => {
 
 router.get('/delete', (req, res, next) => {
   let user_id = req.session.uid;
-  // get group_id from request
   let group_id = req.query.gid;
   Groups.findOneAndRemove({
     _id: group_id,
@@ -97,18 +93,18 @@ router.get('/update', (req, res, next) => {
   })
 });
 
+
 router.post('/import', upload.single('data'), (req, res, next) => {
-  // todo: add it to api doc
   let uid = req.session.uid;
   let file = req.file;
   let filename = 'uploads/import-' + req.session.uid + '.csv';
-  let group_name = req.body.name;
   let arr = [];
   // create a new group
   Groups.create({
     owner: uid,
     creator: uid,
-    name: group_name
+    name: req.body.name,
+    major: req.body.major
   }, (err, doc) => {
     if (err) return next(err);
     import_from_csv(filename, 
@@ -122,14 +118,16 @@ router.post('/import', upload.single('data'), (req, res, next) => {
         console.log(arr);
         Cards.insertMany(arr, (err) => {
           if (err) return next(err);
-          res.send({status: "OK"});
+          res.send({
+            status: "OK",
+            res: doc._id
+          });
         });
       });
   });
 });
 
 router.get('/export', (req, res, next) => {
-  // todo: add it to api doc
   let user_id = req.session.uid;
   Groups.findOne({
     _id: req.query.gid,

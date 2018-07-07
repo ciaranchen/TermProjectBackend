@@ -13,7 +13,32 @@
 |405 |'no auth.' |用户未登陆 |
 |405 |'no such a group.' | 无卡片组 或 用户无权限 |
 |405 |'no enough params.' |参数不足 |
-|500|无|请咨询管理员(是的真的BUG了) |
+|500 |无 |请咨询管理员(是的真的BUG了) |
+
+### 类型说明
+
+#### Group记录
+
+|属性名|类型|说明|
+|:----- |:-------|----- |
+|name |String | 卡片组名称 |
+|owner |ObjectId | 卡片组所有者用户id |
+|_id |ObjectId | 卡片组id |
+|major |String | 卡片组分类 |
+
+#### Card记录
+
+|属性名|类型|说明|
+|:----- |:-------|----- |
+|group |ObjectId | 所属卡片组id |
+|question |String | 问题 |
+|answer |String | 答案 |
+
+#### majorEnum
+
+这个字段用来指定卡片组的分类，所有卡片组的类别应为其中之一。以下为所有可能的分类
+
+> '英语', '数学', '历史', '政治', '编程', '法学', '物理', '天文', '经济学', '医学', '自动化', '生物学', '自然科学', '人文', '计算机'
 
 ## Users
 
@@ -29,11 +54,11 @@
 
 #### 请求参数
 
-|参数|必选|类型|说明|
-|:----- |:-------|:-----|----- |
-|username |true |string | 用户名 |
-|password |ture |string | 密码 |
-|email |ture |string | 邮箱 |
+|参数|类型|说明|
+|:----- |:-------|----- |
+|username |string | 用户名 |
+|password |string | 密码 |
+|email |string | 邮箱 |
 
 #### 返回字段(JSON)
 
@@ -63,10 +88,10 @@
 
 #### 请求参数
 
-|参数|必选|类型|说明|
-|:----- |:-------|:-----|----- |
-|password |ture |string | 密码 |
-|email |ture |string | 邮箱 |
+|参数|类型|说明|
+|:------ |:-------|----- |
+|password |string | 密码 |
+|email |string | 邮箱 |
 
 #### 返回字段(JSON)
 
@@ -127,11 +152,10 @@ Session:
 
 #### 请求参数
 
-query
-
 |属性名|类型|说明|
 |:----- |:-------|----- |
 |name |String | 卡片组名称 |
+|major |String | 卡片组分类。应为majorEnum中的一个。 |
 
 #### 返回字段(JSON)
 
@@ -165,7 +189,7 @@ query
 |属性名|类型|说明|
 |:----- |:-------|----- |
 |status |String | 状态 |
-|res    | Group | 卡片组信息数组 |
+|res    | Group 数组 | 卡片组数组 |
 
 #### 接口示例
 
@@ -224,6 +248,65 @@ query
 |属性名|类型|说明|
 |:----- |:-------|----- |
 |status |String | 状态 |
+
+#### 接口示例
+
+> 无
+
+### import
+
+从csv文件导入卡片组信息
+
+#### URL
+
+> [http://localhost:3000/groups/import](http://localhost:3000/groups/import)
+
+#### HTTP请求方式
+
+> POST
+
+#### 请求参数
+
+> post参数
+
+|属性名|类型|说明|
+|:----- |:-------|----- |
+|name |String | 导入卡片组名称 |
+|major |String | 导入卡片组分类。应为majorEnum中的一个。 |
+|data |文件 | 数据文件 |
+
+#### 返回字段(JSON)
+
+|属性名|类型|说明|
+|:----- |:-------|----- |
+|status |String | 状态 |
+|res |ObjectId | 新建的卡片组的id |
+
+#### 接口示例
+
+> 无
+
+### export
+
+导出卡片组信息到csv文件
+
+#### URL
+
+> [http://localhost:3000/groups/export](http://localhost:3000/groups/export)
+
+#### HTTP请求方式
+
+> GET
+
+#### 请求参数
+
+|属性名|类型|说明|
+|:----- |:-------|----- |
+|gid |ObjectId | 卡片组id |
+
+#### 返回字段
+
+直接下载文件
 
 #### 接口示例
 

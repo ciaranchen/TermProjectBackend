@@ -50,10 +50,13 @@ router.get('/', (req, res) => {
   let gid = req.query.gid;
   // todo: select card
   // todo: lazy load
-  Cards.find({ group: gid }, {_id: 0, __v: 0, fileLoc: 0}, (err, docs) => {
-    if (err) next(err);
-    else res.send({status:"OK", res: docs});
-  })
+  Cards.find(
+    { group: gid },
+    {_id: 0, __v: 0, fileLoc: 0},
+    (err, docs) => {
+      if (err) next(err);
+      else res.send({status:"OK", res: docs});
+    });
 });
 
 // create card
