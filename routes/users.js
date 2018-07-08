@@ -61,7 +61,8 @@ router.get('/testLogin', (req, res, next) => {
 router.get('/delete_user', (req, res, next) => {
   if (!req.session.uid) {
     next({status: 405, message: 'not auth.'});
-  };
+  }
+  ;
   let uid = req.session.uid;
   Users.deleteOne({
     _id: uid
@@ -72,7 +73,6 @@ router.get('/delete_user', (req, res, next) => {
 });
 
 router.get('/profile', (req, res, next) => {
-  // todo: fix it
   UserModel.findById(req.session.uid)
     .exec((err, user) => {
       if (err) next(err);
@@ -84,8 +84,8 @@ router.get('/profile', (req, res, next) => {
 router.get('/query_name', (req, res, next) => {
   Users.findOne({email: req.query.email}, (err, doc) => {
     if (err) next(err);
-    else if (doc) res.send({status:'OK', res: true});
-    else res.send({status:'OK', res: false});
+    else if (doc) res.send({status: 'OK', res: true});
+    else res.send({status: 'OK', res: false});
   });
 });
 

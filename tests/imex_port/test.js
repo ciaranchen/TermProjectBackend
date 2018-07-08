@@ -8,21 +8,21 @@ describe('test User Model', function() {
   // group id
   let gid;
 
-  // it('register', function(done) {
-  //   this.timeout(0);
-  //   session(app)
-  //     .post('/users/register')
-  //     .send({
-  //       email: 'ciaranchen@gmail.com',
-  //       username: 'ciaran',
-  //       password: 'ciaranchen'
-  //     }).set('Accept', 'application/json')
-  //     .expect(200, {status:'OK'})
-  //     .end((err, res) => {
-  //       console.log(res.body);
-  //       done();
-  //     });
-  // });
+  it('register', function(done) {
+    this.timeout(0);
+    session(app)
+      .post('/users/register')
+      .send({
+        email: 'ciaranchen@gmail.com',
+        username: 'ciaran',
+        password: 'ciaranchen'
+      }).set('Accept', 'application/json')
+      .expect(200, {status:'OK'})
+      .end((err, res) => {
+        console.log(res.body);
+        done();
+      });
+  });
 
   it('login', function(done) {
     this.timeout(0);
@@ -101,19 +101,19 @@ describe('test User Model', function() {
       .end(done);
   });
 
-  // it('delete user', (done) => {
-  //   request
-  //     .get('/users/delete_user')
-  //     .expect(302)
-  //     .end((err, res) => {
-  //       if (err) return done(err);
-  //       res.headers.location.should.equal('/users/logout');
-  //       return done();
-  //     });
-  // });
+  it('delete user', (done) => {
+    request
+      .get('/users/delete_user')
+      .expect(302)
+      .end((err, res) => {
+        if (err) return done(err);
+        res.headers.location.should.equal('/users/logout');
+        return done();
+      });
+  });
 });
 
-// after(() => {
-//   console.log('test finished.');
-//   process.exit(0);
-// });
+after(() => {
+  console.log('test finished.');
+  process.exit(0);
+});
