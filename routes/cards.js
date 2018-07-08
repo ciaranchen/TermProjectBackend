@@ -11,11 +11,14 @@ let upload = multer({
   storage: multer.diskStorage({
     destination: 'uploads/',
     filename: (req, file, cb) => {
-      // todo: do something with fileFormat
-      // todo: fix it
-      // let filename = `${file.fieldname}-${md5(file)}.${fileFormat[fileFormat.length - 1]}`;
-      let filename = 'test.png';
-      console.log(filename);
+      let filename = `${file.fieldname}-${md5(file)}`;
+
+      // received file *has* a extension type
+      let originFileName = file.toString();
+      if (originFileName.indexOf('.') >= 0) {
+        filename += `.${originFileName.split('.').splice(-1)[0]}`
+      }
+      console.log(`New File: ${filename}`);
       cb(null, filename);
     }
   })
@@ -51,11 +54,11 @@ router.get('/', (req, res) => {
   // todo: select card
   // todo: lazy load
   Cards.find(
-    { group: gid },
+    {group: gid},
     {_id: 0, __v: 0, fileLoc: 0},
     (err, docs) => {
       if (err) next(err);
-      else res.send({status:"OK", res: docs});
+      else res.send({status: "OK", res: docs});
     });
 });
 
@@ -69,9 +72,12 @@ router.post('/create', upload.single('photo'), (req, res) => {
     answer: req.body.answer,
   };
   if (file) {
-    // todo: fix it
-    // let filename = `${file.fieldname}-${md5(file)}.${fileFormat[fileFormat.length - 1]}`;
-    data.filename = 'test.png'
+    let originFileName = file.toString();
+    let filename = `${file.fieldname}-${md5(file)}`;
+    if (originFileName.indexOf('.') >= 0) {
+      filename += `.${originFileName.split('.').splice(-1)[0]}`
+    }
+    data.filename = filename
   }
   Cards.create(data, (err, doc) => {
     if (err) next(err);
