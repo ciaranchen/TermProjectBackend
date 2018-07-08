@@ -52,10 +52,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 const groupsRouter = require('./routes/groups');
+const commonRouter = require('./routes/common');
 
 app.use('/users', usersRouter);
 app.use('/cards', cardsRouter);
 app.use('/groups', groupsRouter);
+app.use('/common', commonRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
