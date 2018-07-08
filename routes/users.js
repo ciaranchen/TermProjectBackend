@@ -76,8 +76,8 @@ router.get('/profile', (req, res, next) => {
 router.get('/query_name', (req, res, next) => {
   Users.findOne({email: req.query.email}, (err, doc) => {
     if (err) next(err);
-    else if (doc) res.send({status:'OK', res: true});
-    else res.send({status:'OK', res: false});
+    else if (doc) res.send({status: 'OK', res: true});
+    else res.send({status: 'OK', res: false});
   });
 });
 
