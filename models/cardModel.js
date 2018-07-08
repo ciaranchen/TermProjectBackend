@@ -7,16 +7,20 @@ let CardModel = mongoose.model('CardModel', Schema({
   group: {
     type: Schema.Types.ObjectId,
     ref: 'CardGroupModel',
-    require: true},
+    require: true
+  },
   question: {
     type: String,
-    require: true},
+    require: true
+  },
   answer: {
     type: String,
-    require: true},
+    require: true
+  },
   imageLoc: {
     type: String,
-    require: false}
+    require: false
+  }
 }));
 
 exports.CardModel = CardModel;
