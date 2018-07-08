@@ -12,11 +12,7 @@ router.post('/register', (req, res, next) => {
     password: req.body.password
   }, (err) => {
     if (err) next(err);
-    else {
-      res.send({
-        status: "OK"
-      });
-    }
+    else res.send({ status: "OK" });
   });
 });
 
@@ -28,13 +24,11 @@ router.post('/login', (req, res, next) => {
 
     UserModel.authenticate(email, password, (err, user) => {
       if (err || !user) return next(err);
-      else {
-        req.session.uid = user._id;
-        res.send({
-          status: "OK",
-          res: user.username
-        });
-      }
+      req.session.uid = user._id;
+      res.send({
+        status: "OK",
+        res: user.username
+      });
     });
   } else {
     next({status: 405, message: 'no enough params.'});
@@ -52,16 +46,14 @@ router.get('/logout', (req, res, next) => {
     res.send({"status": "OK"});
 });
 
-// ================ maybe not use =====================
 router.get('/testLogin', (req, res, next) => {
   if (req.session.uid) res.send({status: "OK", res: true});
   else res.send({status: "OK", res: false});
 });
 
 router.get('/delete_user', (req, res, next) => {
-  if (!req.session.uid) {
-    next({status: 405, message: 'not auth.'});
-  };
+  if (!req.session.uid)
+    return next({status: 405, message: 'not auth.'});
   let uid = req.session.uid;
   Users.deleteOne({
     _id: uid
@@ -71,8 +63,8 @@ router.get('/delete_user', (req, res, next) => {
   });
 });
 
+// ================ maybe not use =====================
 router.get('/profile', (req, res, next) => {
-  // todo: fix it
   UserModel.findById(req.session.uid)
     .exec((err, user) => {
       if (err) next(err);

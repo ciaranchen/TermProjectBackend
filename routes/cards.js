@@ -107,7 +107,6 @@ router.post('/:cid/update', (req, res, next) => {
 });
 
 // delete card
-// todo: add it to api doc
 router.get('/:cid/delete', (req, res) => {
   let gid = req.query.gid;
   Cards.findOneAndRemove({
@@ -119,6 +118,15 @@ router.get('/:cid/delete', (req, res) => {
   });
 });
 
-// todo: get image file
+router.get('/:cid/file', (req, res) => {
+  let gid = req.query.gid;
+  Cards.findOne({
+    _id: req.params.cid,
+    group: gid
+  }, (err, doc) => {
+    let filePath = "uploads/" + doc.fileLoc;
+    res.download(filePath);
+  });
+});
 
 module.exports = router;

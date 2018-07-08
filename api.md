@@ -136,6 +136,61 @@ Session:
 
 > 无
 
+### testLogin
+
+这是一个测试用的端口，测试用户是否已登录。
+
+#### URL
+
+> [http://localhost:3000/user/testLogin](http://localhost:3000/user/testLogin)
+
+#### HTTP请求方式
+
+> GET
+
+#### 请求参数
+
+无
+
+#### 返回字段(JSON)
+
+|属性名|类型|说明|
+|:----- |:-------|----- |
+|status |String | 状态 |
+|res |Boolean | true 表示用户已登录， false 表示未登录 |
+
+#### 接口示例
+
+> 无
+
+### delete user
+
+这是一个测试用的端口，用于删除一个用户。
+
+#### URL
+
+> [http://localhost:3000/user/delete_user](http://localhost:3000/user/delete_user)
+
+#### HTTP请求方式
+
+> GET
+
+#### 请求参数
+
+无
+
+#### 返回字段(JSON)
+
+如未登录，返回一个 405。
+
+若已登录，删除用户，并返回302重定向到logout。
+
+> note: 此时session中的字段未被删除。
+
+#### 接口示例
+
+> 无
+
 ## Groups
 
 本节下所有项目都需要用户登陆状态，即保有session.uid
@@ -381,7 +436,7 @@ Body:
 
 #### URL
 
-> [http://localhost:3000/cards/update](http://localhost:3000/cards/update)
+> [http://localhost:3000/cards/:cid/update](http://localhost:3000/cards/:cid/update)
 
 #### HTTP请求方式
 
@@ -389,7 +444,13 @@ Body:
 
 #### 请求参数
 
-Body:
+URL 参数:
+
+|属性名|类型|说明|
+|:----- |:-------|----- |
+|cid |ObjectId | 卡片id |
+
+Body 参数:
 
 |属性名|类型|说明|
 |:----- |:-------|----- |
@@ -402,6 +463,108 @@ Body:
 |属性名|类型|说明|
 |:----- |:-------|----- |
 |status |String | 状态 |
+
+#### 接口示例
+
+> 无
+
+### delete
+
+删除卡片
+
+#### URL
+
+> [http://localhost:3000/cards/:cid/delete](http://localhost:3000/cards/:cid/delete)
+
+#### HTTP请求方式
+
+> GET
+
+#### 请求参数
+
+url参数
+
+|属性名|类型|说明|
+|:----- |:-------|----- |
+|cid |ObjectId | 卡片id |
+
+#### 返回字段(JSON)
+
+|属性名|类型|说明|
+|:----- |:-------|----- |
+|status |String | 状态 |
+
+#### 接口示例
+
+> 无
+
+### file
+
+获取卡片文件
+
+#### URL
+
+> [http://localhost:3000/cards/:cid/file](http://localhost:3000/cards/:cid/file)
+
+#### HTTP请求方式
+
+> GET
+
+#### 请求参数
+
+url参数
+
+|属性名|类型|说明|
+|:----- |:-------|----- |
+|cid |ObjectId | 卡片id |
+
+#### 返回字段
+
+直接下载文件
+
+#### 接口示例
+
+> 无
+
+## 简单推荐系统
+
+包含一些简单推荐系统实现。
+
+在 [http://localhost:3000/common](http://localhost:3000/common) 重定向到默认的实现。
+
+当前默认的实现是随机推荐。
+
+### randomn 推荐
+
+随机推荐卡片组。
+
+> 使用mongodb的sample
+
+#### URL
+
+> [http://localhost:3000/common/randomn](http://localhost:3000/common/randomn)
+
+#### HTTP请求方式
+
+> GET
+
+#### 请求参数
+
+query 参数
+
+|属性名|类型|说明|
+|:----- |:-------|----- |
+|major |String | 卡片组分类。应为majorEnum之一 |
+|num |Integer | 卡片组数量，推荐系统最多返回的卡片组数量 |
+
+#### 返回字段
+
+|属性名|类型|说明|
+|:----- |:-------|----- |
+|status |String | 状态 |
+|res |Groups数组 | 卡片组数组 |
+
+> note: 当数据库中卡片组的数量少于num参数时，会返回数据库所有的记录。
 
 #### 接口示例
 
