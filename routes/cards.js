@@ -49,13 +49,14 @@ router.use((req, res, next) => {
 });
 
 // query card.
-router.get('/', (req, res) => {
+router.get('/', (req, res, next) => {
   let gid = req.query.gid;
-  // todo: select card
-  // todo: lazy load
+  let skip = req.query.skip? parseInt(req.query.skip): 0;
+  let limit = req.query.limit? parseInt(req.query.limit): 0;
   Cards.find(
     {group: gid},
     {_id: 0, __v: 0, fileLoc: 0},
+    {skip: skip, limit: limit, sort: {_id: 1}},
     (err, docs) => {
       if (err) next(err);
       else res.send({status: "OK", res: docs});
@@ -90,7 +91,6 @@ router.post('/create', upload.single('photo'), (req, res) => {
 
 // update card
 router.post('/:cid/update', (req, res, next) => {
-  // todo: optional args
   let file = req.file;
   let gid = req.query.gid;
   let set_set = {};
