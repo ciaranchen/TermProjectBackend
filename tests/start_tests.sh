@@ -1,14 +1,13 @@
-# !bin/sh
+#!/usr/bin/bash
 
 # base Path
 PROJECT_FOLDER=$(dirname $(cd `dirname $0`; pwd))
-cd $PROJECT_FOLDER
 
 # start the database
-bash ./sqlScripts/start_mongodb.sh &
+bash $PROJECT_FOLDER/sqlScripts/start_mongodb.sh &
 
 # move to this folder
-cd tests
+cd $PROJECT_FOLDER/tests
 
 # for each folder
 for i in $(ls -F | grep "/$")
@@ -16,6 +15,8 @@ do
     echo $i
     cd $i
     # run the test
-    mocha test.js
+    mocha test.js --exit
     cd ..
 done
+
+echo "note: the mongoDB service is still running"

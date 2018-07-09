@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/bash
+
 PROJECT_FOLDER=$(dirname $(cd `dirname $0`; pwd))
 # echo $PROJECT_FOLDER
 mkdir -p $PROJECT_FOLDER/data/data

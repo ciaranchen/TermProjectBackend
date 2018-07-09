@@ -52,7 +52,6 @@ describe('test User Model', function() {
   // group id, card id;
   let gid, cid;
 
-
   it('before login', (done) => {
     this.timeout(0);
     request
@@ -177,7 +176,7 @@ describe('test User Model', function() {
         return done();
       });
   });
-  
+
   it('query card', (done) => {
     this.timeout(0);
     request
@@ -263,6 +262,5 @@ describe('after login', () => {
 });
 
 after(() => {
-  console.log('test finished.');
-  process.exit(0);
+  // app.close();
 });

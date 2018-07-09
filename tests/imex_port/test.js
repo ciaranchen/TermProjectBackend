@@ -112,8 +112,3 @@ describe('test User Model', function() {
       });
   });
 });
-
-after(() => {
-  console.log('test finished.');
-  process.exit(0);
-});

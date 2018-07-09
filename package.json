@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "sh ./tests/start_test.sh"
+    "test": "bash ./tests/start_tests.sh"
   },
   "repository": {
     "type": "git",
